@@ -1,0 +1,6 @@
+@PersonSearchProject_HostAddress = http://localhost:5138
+
+GET {{PersonSearchProject_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
