@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 // Configure PostgreSQL connection
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
-        @"Host=localhost;Port=5434;Database=PersonsDB;Username=postgres;Password=Aleks131313#"));
+        @"Host=localhost;Port=5434;Database=\"Search Persons\";Username=postgres;Password=Aleks131313#"));
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
