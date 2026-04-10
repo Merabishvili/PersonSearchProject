@@ -14,7 +14,7 @@
     <hr>
 
     <?php
-    require_once 'webconfigs.php';
+    require_once __DIR__ . '/../webconfigs.php';
     if(isset($_GET['personalNumber']) && isset($_GET['surname'])) {
         $personalNumber = urlencode($_GET['personalNumber']);
         $surname = urlencode($_GET['surname']);
