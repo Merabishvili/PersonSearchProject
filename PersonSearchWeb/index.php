@@ -21,40 +21,32 @@ if(isset($_GET['personalNumber']) && isset($_GET['surname'])) {
 
     $url = $apiBaseUrl . "/api/person/search?personalNumber=" . $personalNumber . "&surname=" . $surname;
 
-    // Better error handling
-    $context = stream_context_create([
-        'http' => [
-            'timeout' => 5,
-            'ignore_errors' => true
-        ]
-    ]);
+    // Use cURL for better debugging
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable verbose output
+    curl_setopt($ch, CURLOPT_HEADER, true);  // Include headers in response
     
-    $response = @file_get_contents($url, false, $context);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    $info = curl_getinfo($ch);
+    curl_close($ch);
     
-    // Check HTTP response headers
-    if ($http_response_header) {
-        $status = $http_response_header[0];
-        echo "<!-- Debug: HTTP Status: $status -->";
-    }
+    echo "<h2>Debug Information:</h2>";
+    echo "<p><strong>URL:</strong> " . htmlspecialchars($url) . "</p>";
+    echo "<p><strong>HTTP Status Code:</strong> " . $httpCode . "</p>";
     
-    if($response === FALSE) {
-        echo "<p style='color:red;'>API Connection Error:</p>";
-        echo "<p>URL: " . htmlspecialchars($url) . "</p>";
-        echo "<p>Make sure the API server is running at: " . htmlspecialchars($apiBaseUrl) . "</p>";
-        echo "<p>Error: " . error_get_last()['message'] . "</p>";
+    if ($error) {
+        echo "<p style='color:red;'><strong>cURL Error:</strong> " . htmlspecialchars($error) . "</p>";
     } else {
-        $data = json_decode($response, true);
-        if ($data) {
-            echo "<h2>Result:</h2>";
-            echo "Name: " . htmlspecialchars($data['name']) . "<br>";
-            echo "Surname: " . htmlspecialchars($data['surname']) . "<br>";
-            echo "Personal Number: " . htmlspecialchars($data['personalNumber']) . "<br>";
-            echo "Sex: " . htmlspecialchars($data['sex']) . "<br>";
-            echo "Address: " . htmlspecialchars($data['address']) . "<br>";
-        } else {
-            echo "<p style='color:red;'>Invalid JSON response from API</p>";
-        }
+        echo "<p style='color:green;'><strong>Connection:</strong> Success</p>";
     }
+    
+    echo "<p><strong>Full Response:</strong></p>";
+    echo "<pre>" . htmlspecialchars($response) . "</pre>";
 }
 ?>
 </body>
