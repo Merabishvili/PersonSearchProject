@@ -3,13 +3,15 @@ using PersonSearchProject.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("apiconfig.json", optional: true, reloadOnChange: true);
+
 // Add services to the container.
 builder.Services.AddControllers();
 
 // Configure PostgreSQL connection
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Configuration["DBConnection"]));
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();

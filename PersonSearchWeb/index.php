@@ -14,12 +14,13 @@
     <hr>
 
     <?php
+    require_once 'webconfigs.php';
     if(isset($_GET['personalNumber']) && isset($_GET['surname'])) {
         $personalNumber = urlencode($_GET['personalNumber']);
         $surname = urlencode($_GET['surname']);
 
         // Change the URL if your API runs on HTTPS/HTTP
-        $url = "http://localhost:5138/api/person/search?personalNumber=" . urlencode($personalNumber) . "&surname=" . urlencode($surname);
+    $url = $apiBaseUrl . "/api/person/search?personalNumber=" . $personalNumber . "&surname=" . $surname;
 
         $response = file_get_contents($url);
         if($response === FALSE) {
