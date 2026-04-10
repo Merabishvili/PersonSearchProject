@@ -3,7 +3,7 @@ using PersonSearchProject.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("apiconfig.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddJsonFile("apiconfigs.json", optional: true, reloadOnChange: true);
 
 // Add services to the container.
 builder.Services.AddControllers();
