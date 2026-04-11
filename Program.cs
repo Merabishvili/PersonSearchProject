@@ -5,23 +5,34 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("apiconfigs.json", optional: true, reloadOnChange: true);
 
-// Add services to the container.
+builder.Services.AddLogging(config =>
+{
+    config.ClearProviders();
+    config.AddConsole();
+    config.SetMinimumLevel(LogLevel.Information);
+});
+
 builder.Services.AddControllers();
 
-// Configure PostgreSQL connection
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration["DBConnection"]));
+{
+    var connString = builder.Configuration["DBConnection"];
+    options.UseNpgsql(connString, o => o.CommandTimeout(15));
+});
 
-// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Read BaseUrl from apiconfig.json and set applicationUrl
+var baseUrl = builder.Configuration["BaseUrl"];
+builder.WebHost.UseUrls(baseUrl);
+
 var app = builder.Build();
 
-// Configure middleware
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.MapControllers();
+
+Console.WriteLine($"API Started on {baseUrl}");
 app.Run();
