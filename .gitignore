@@ -3,3 +3,11 @@ obj/
 .vs/
 *.user
 *.suo
+
+# Build output
+publish/
+
+# Configs (server-only)
+apiconfigs.json
+webconfigs.php
+appsettings.*.json
