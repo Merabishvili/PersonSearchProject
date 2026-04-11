@@ -1,3 +1,4 @@
 {
-  "DBConnection": "Host=localhost;Port=5432;Database=SearchPersons_Test;Username=SearchPersons_Test;Password=Aleks141414$"
+  "DBConnection": "Host=localhost;Port=5432;Database=SearchPersons_Test;Username=postgres;Password=Aleks131313#",
+  "BaseUrl": "http://localhost:5139"
 }
