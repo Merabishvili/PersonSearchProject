@@ -14,26 +14,40 @@
     <hr>
 
     <?php
-    if(isset($_GET['personalNumber']) && isset($_GET['surname'])) {
-        $personalNumber = urlencode($_GET['personalNumber']);
-        $surname = urlencode($_GET['surname']);
+require_once __DIR__ . '/../webconfigs.php';
+if(isset($_GET['personalNumber']) && isset($_GET['surname'])) {
+    $personalNumber = urlencode($_GET['personalNumber']);
+    $surname = urlencode($_GET['surname']);
 
-        // Change the URL if your API runs on HTTPS/HTTP
-        $url = "http://localhost:5138/api/person/search?personalNumber=" . urlencode($personalNumber) . "&surname=" . urlencode($surname);
+    $url = $apiBaseUrl . "/api/person/search?personalNumber=" . $personalNumber . "&surname=" . $surname;
 
-        $response = file_get_contents($url);
-        if($response === FALSE) {
-            echo "<p style='color:red;'>Person not found or API error.</p>";
-        } else {
-            $data = json_decode($response, true);
-            echo "<h2>Result:</h2>";
-            echo "Name: " . htmlspecialchars($data['name']) . "<br>";
-            echo "Surname: " . htmlspecialchars($data['surname']) . "<br>";
-            echo "Personal Number: " . htmlspecialchars($data['personalNumber']) . "<br>";
-            echo "Sex: " . htmlspecialchars($data['sex']) . "<br>";
-            echo "Address: " . htmlspecialchars($data['address']) . "<br>";
-        }
+    // Use cURL for better debugging
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable verbose output
+    curl_setopt($ch, CURLOPT_HEADER, true);  // Include headers in response
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    $info = curl_getinfo($ch);
+    curl_close($ch);
+    
+    echo "<h2>Debug Information:</h2>";
+    echo "<p><strong>URL:</strong> " . htmlspecialchars($url) . "</p>";
+    echo "<p><strong>HTTP Status Code:</strong> " . $httpCode . "</p>";
+    
+    if ($error) {
+        echo "<p style='color:red;'><strong>cURL Error:</strong> " . htmlspecialchars($error) . "</p>";
+    } else {
+        echo "<p style='color:green;'><strong>Connection:</strong> Success</p>";
     }
-    ?>
+    
+    echo "<p><strong>Full Response:</strong></p>";
+    echo "<pre>" . htmlspecialchars($response) . "</pre>";
+}
+?>
 </body>
 </html>

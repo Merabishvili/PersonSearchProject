@@ -1,0 +1,4 @@
+{
+  "DBConnection": "Host=localhost;Port=5432;Database=SearchPersons_Test;Username=SearchPersons_Test;Password=Aleks141414$",
+  "BaseUrl": "http://localhost:5139"
+}
